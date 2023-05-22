@@ -152,9 +152,45 @@ Matrix Matrix::transpose_matrix()
 
 Matrix Matrix::inverse_matrix()
 {
-    ;
+
 }
 
+Matrix* Matrix::Minor(int a,int b)
+{   
+    Matrix* temp = new Matrix(N-1,N-1);
+    int row_count = 0;
+    for(int i=0;i<N;i++){
+        if(i==a){
+            continue;
+        }
+        int col_count = 0;
+        for(int j=0;j<N;j++){
+            if(j==b){
+                continue;
+            }
+            temp->mtrx[row_count][col_count] = mtrx[i][j];
+            col_count++;
+        }
+        row_count++;
+    }
+    return temp;
+}
+
+int Matrix::Determinant()
+{
+    int det=0;
+    if (N==1) {
+        return mtrx[0][0];
+    }
+    else{
+        for(int i=0;i<N;i++){
+            Matrix* temp = this->Minor(0,i);
+            det += (i % 2 == 0 ? 1 :-1) * (mtrx[0][i]) * temp->Determinant();
+            delete temp;
+        }
+    }
+    return det;
+}
 
 void Matrix::get_matrix()
 {
