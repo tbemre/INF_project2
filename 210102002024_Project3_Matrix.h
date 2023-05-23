@@ -17,7 +17,7 @@ class Matrix{
         Matrix operator*(Matrix const& mtrx2);
         Matrix scalar_matrix(int);
         Matrix transpose_matrix();
-        Matrix inverse_matrix();
+        void inverse_matrix();
         void set_matrix(int,int,int[]);
         void get_matrix();
         Matrix* Minor(int,int);

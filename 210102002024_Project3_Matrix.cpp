@@ -3,16 +3,16 @@
 Matrix::Matrix()
 {
     N=2;
-    mtrx = new double* [N];
+    mtrx = new double* [N];         //This function is the default constructor, allocates memory for 2x2.
     for(int i=0; i<N;i++){
         mtrx[i] = new double [N+1];
     }
 }
 
-Matrix::Matrix(int r,int col)
+Matrix::Matrix(int r,int col)  //This function is constructor, allocates memory on given values. 
 {
     N=r;
-    mtrx = new double* [N];
+    mtrx = new double* [N];      
     for(int i=0; i<N;i++){
         mtrx[i] = new double [col];
     }
@@ -20,7 +20,7 @@ Matrix::Matrix(int r,int col)
     column=col;
 }
 
-Matrix::Matrix(int row, int col, int arr[])
+Matrix::Matrix(int row, int col, int arr[]) // This function is constructor, allocates memory and create matrix with numbers in given array.
 {
     N = row;
     this->row = row;
@@ -44,7 +44,7 @@ Matrix::Matrix(int row, int col, int arr[])
     }
 }
 
-Matrix::~Matrix()
+Matrix::~Matrix() //destructor , frees the memory.
 {
     for(int i = 0; i < N; i++){
         delete[] mtrx[i];
@@ -52,7 +52,7 @@ Matrix::~Matrix()
     delete[] mtrx;
 }
 
-Matrix::Matrix(Matrix const& mtrx2)
+Matrix::Matrix(Matrix const& mtrx2) // copy constructor
 {
     N = mtrx2.N;
     row = mtrx2.row;
@@ -67,7 +67,7 @@ Matrix::Matrix(Matrix const& mtrx2)
     }
 }
 
-Matrix Matrix::operator=(Matrix const& mtrx2)
+Matrix Matrix::operator=(Matrix const& mtrx2) //copy operator
 {
     N = mtrx2.N;
     row = mtrx2.row;
@@ -83,7 +83,7 @@ Matrix Matrix::operator=(Matrix const& mtrx2)
     return *this;
 }
 
-Matrix Matrix::operator+(Matrix const& mtrx2)
+Matrix Matrix::operator+(Matrix const& mtrx2) // addition operator
 {
     Matrix temp(mtrx2.row,mtrx2.column);
     if(row==mtrx2.row && column==mtrx2.column)
@@ -97,7 +97,7 @@ Matrix Matrix::operator+(Matrix const& mtrx2)
     return temp;
 }
 
-Matrix Matrix::operator*(Matrix const& mtrx2)
+Matrix Matrix::operator*(Matrix const& mtrx2) //Multipy operator.
 {
     Matrix temp(row,mtrx2.column);
     if(column == mtrx2.row)
@@ -114,7 +114,7 @@ Matrix Matrix::operator*(Matrix const& mtrx2)
     return temp;
 }
 
-Matrix Matrix::operator-(Matrix const& mtrx2)
+Matrix Matrix::operator-(Matrix const& mtrx2) // subtraction operator.
 {
     Matrix temp(mtrx2.row,mtrx2.column);
     if(row==mtrx2.row && column==mtrx2.column)
@@ -128,7 +128,7 @@ Matrix Matrix::operator-(Matrix const& mtrx2)
     return temp;
 }
 
-Matrix Matrix::scalar_matrix(int value)
+Matrix Matrix::scalar_matrix(int value)  // This function product the matrix by the number entered.
 {
     Matrix temp(row,column);
     for(int i=0;i<row;i++){
@@ -139,7 +139,7 @@ Matrix Matrix::scalar_matrix(int value)
     return temp;
 }
 
-Matrix Matrix::transpose_matrix()
+Matrix Matrix::transpose_matrix() // This function give transpose of matrix.
 {
     Matrix temp(column, row);
     for(int i=0;i<row;i++){
@@ -150,16 +150,19 @@ Matrix Matrix::transpose_matrix()
     return temp;
 }
 
-Matrix Matrix::inverse_matrix()
+void Matrix::inverse_matrix() //this function  get inverse of matrix with Gauss-Jordan elimination.
 {
+    if(this->Determinant()==0){
+        cout<<"This matrix cannot be inverted.";
+        return;
+    }
     Matrix temp1(row,column);
     Matrix temp2 = *this;
     for (int i = 0; i < N; i++) {
         temp1.mtrx[i][i] = 1.0;
     }
 
-    //Gauss-Jordan elimination
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++) {   //Gauss-Jordan elimination and measure inverse
     double pivot = temp2.mtrx[i][i];
         for (int j = 0; j < N; j++) {
             temp2.mtrx[i][j] /= pivot;
@@ -176,11 +179,11 @@ Matrix Matrix::inverse_matrix()
             }
         }
     }
-    return temp1;
+    temp1.Matrix::get_matrix();
 
 }
 
-Matrix* Matrix::Minor(int a,int b)
+Matrix* Matrix::Minor(int a,int b) //This function get minor of matrix.this function was written before in the project1 by me.
 {   
     Matrix* temp = new Matrix(N-1,N-1);
     int row_count = 0;
@@ -201,8 +204,9 @@ Matrix* Matrix::Minor(int a,int b)
     return temp;
 }
 
-int Matrix::Determinant()
+int Matrix::Determinant() //This function get determimant of matrix.this function was written before in the project1 by me.
 {
+    if(row!=column){throw runtime_error("The determinant of this matrix cannot be taken!");}
     int det=0;
     if (N==1) {
         return mtrx[0][0];
@@ -210,14 +214,14 @@ int Matrix::Determinant()
     else{
         for(int i=0;i<N;i++){
             Matrix* temp = this->Minor(0,i);
-            det += (i % 2 == 0 ? 1 :-1) * (mtrx[0][i]) * temp->Determinant();
+            det += (i % 2 == 0 ? 1 :-1) * (mtrx[0][i]) * temp->Determinant();  //recursive function.
             delete temp;
         }
     }
     return det;
 }
 
-void Matrix::get_matrix()
+void Matrix::get_matrix() // This function prints the matrix on the console.
 {
     for(int i=0;i<row;i++){
         for(int j=0;j<column;j++){
@@ -228,7 +232,7 @@ void Matrix::get_matrix()
     cout<<endl;
 }
 
-void Matrix::set_matrix(int r, int col,int arr[])
+void Matrix::set_matrix(int r, int col,int arr[])  // This function is used to change the matrix. similar to constructor 
 {
     if(r != row || col != column)
     {
