@@ -152,6 +152,31 @@ Matrix Matrix::transpose_matrix()
 
 Matrix Matrix::inverse_matrix()
 {
+    Matrix temp1(row,column);
+    Matrix temp2 = *this;
+    for (int i = 0; i < N; i++) {
+        temp1.mtrx[i][i] = 1.0;
+    }
+
+    //Gauss-Jordan elimination
+    for (int i = 0; i < N; i++) {
+    double pivot = temp2.mtrx[i][i];
+        for (int j = 0; j < N; j++) {
+            temp2.mtrx[i][j] /= pivot;
+            temp1.mtrx[i][j] /= pivot;
+        }
+        for (int j = 0; j < N; j++) {
+            if (j != i) {
+                double ratio = temp2.mtrx[j][i];
+                
+                for (int k = 0; k < N; k++) {
+                    temp2.mtrx[j][k] -= ratio * temp2.mtrx[i][k];
+                    temp1.mtrx[j][k] -= ratio * temp1.mtrx[i][k];
+                }
+            }
+        }
+    }
+    return temp1;
 
 }
 
